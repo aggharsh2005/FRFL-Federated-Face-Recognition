@@ -1,61 +1,70 @@
 # FRFL — Federated Face Recognition
 
-A notebook-based prototype for face recognition with ArcFace embeddings, a compact MLP classifier, three simulated clients, diff-weighted aggregation, and FedProx fine-tuning.
+Federated-style face recognition using InsightFace/ArcFace embeddings, a PyTorch MLP classifier, three simulated clients, diff-weighted aggregation, and FedProx fine-tuning.
 
-## Repository structure
+## Project structure
 
 ```text
 FRFL-Federated-Face-Recognition/
-├── FRFL_Federated_Face_Recognition.ipynb   # Full step-by-step notebook (64 cells)
+├── FRFL_Federated_Face_Recognition.ipynb  # Complete interactive Colab workflow
+├── main.py                                # CLI entry point for modular baseline training
+├── utils.py                               # Shared seed and directory utilities
 ├── scripts/
-│   └── run_experiment.py                   # Ordered notebook workflow as Python code
+│   └── run_experiment.py                  # Small compatibility note; no duplicated monolithic code
 ├── src/frfl/
-│   ├── __init__.py
-│   ├── model.py                            # FaceMLP, settings, random seed helper
-│   ├── training.py                         # Local training and FedProx training
-│   ├── embeddings.py                       # ArcFace embedding extraction + cache
-│   ├── aggregation.py                      # Diff-weighted aggregation helpers
-│   └── inference.py                        # Top-k prediction and before/after comparison
+│   ├── config.py                          # Defaults and standard output directories
+│   ├── model.py                           # FaceMLP and training constants
+│   ├── embeddings.py                      # Face embedding extraction and cache
+│   ├── training.py                        # Local training and FedProx optimizer
+│   ├── aggregation.py                     # Diff-weighted state-dict aggregation
+│   ├── federated.py                       # Federated aggregation interface
+│   ├── inference.py                       # Top-k prediction and before/after analysis
+│   └── evaluation.py                      # Evaluation-facing exports
 ├── requirements-colab.txt
 ├── pyproject.toml
-├── .gitignore
 └── LICENSE
 ```
 
-## Model and experiment
+## Which file does what?
 
-- **Embedding model:** InsightFace `buffalo_l` / ArcFace, producing 512-dimensional face embeddings.
+- **`main.py`**: command-line entry point; creates embeddings and trains/saves a baseline classifier.
+- **`utils.py`**: shared seed and output-directory utilities.
+- **`src/frfl/model.py`**: defines the MLP classifier.
+- **`src/frfl/embeddings.py`**: extracts and caches 512-dimensional ArcFace embeddings.
+- **`src/frfl/training.py`**: local model training and FedProx fine-tuning.
+- **`src/frfl/aggregation.py` / `federated.py`**: computes model drift and combines client state dictionaries.
+- **`src/frfl/inference.py` / `evaluation.py`**: top-k predictions and before/after comparisons.
+- **Notebook**: complete original end-to-end experiment, including interactive image uploads, Model_A/Model_B/Model_C appearance-specific updates, final aggregation, plots, and evaluation.
+
+## Run the modular baseline
+
+Install the dependencies in a suitable Python/Colab environment, then run:
+
+```bash
+python main.py --dataset-dir /path/to/105_classes_pins_dataset --work-dir artifacts --epochs 30
+```
+
+The dataset directory should contain one subfolder per identity, with that identity's images inside. Use `--ctx-id -1` for CPU or `--ctx-id 0` for the first GPU where supported.
+
+## Run the full experiment
+
+Open `FRFL_Federated_Face_Recognition.ipynb` in Google Colab and run the cells in order. The notebook retains the original workflow and its Google Drive paths / interactive upload prompts. Place appearance-specific training images under the configured `updated_samples_A`, `updated_samples_B`, and `updated_samples_C` folders.
+
+The complete interactive workflow is still notebook-based; `main.py` is a modular baseline-training entry point, not a replacement for every interactive notebook step. The notebook has not been validated end-to-end in a fresh runtime as part of this refactor.
+
+## Experiment overview
+
+- **Embedding model:** InsightFace `buffalo_l` / ArcFace, 512-dimensional embeddings.
 - **Classifier:** MLP `512 → 256 → 128 → number_of_classes`.
-- **Clients:** `Model_A`, `Model_B`, and `Model_C`, each receiving a different appearance update (mask, sunglasses + dog, glasses).
-- **Aggregation:** diff-weighted averaging of PyTorch state dictionaries.
+- **Clients:** `Model_A`, `Model_B`, and `Model_C`, with mask, sunglasses + dog, and glasses appearance updates.
+- **Aggregation:** diff-weighted averaging of PyTorch model state dictionaries.
 - **Convergence:** FedProx fine-tuning around the shared global model.
 
-The three clients are simulated in one Colab runtime; this repository does not implement a distributed network deployment. Federated learning by itself does not guarantee privacy.
-
-## Run in Google Colab
-
-1. Open `FRFL_Federated_Face_Recognition.ipynb` and run cells in order, **or** run `scripts/run_experiment.py` in a Colab runtime.
-2. Install dependencies with `!pip install -r requirements-colab.txt`. If installation fails, check package compatibility with the current Colab Python/CUDA runtime.
-3. Mount Google Drive when prompted. The base dataset path expected by the experiment is `MyDrive/FRFL/dataset/105_classes_pins_dataset/`.
-4. Put appearance-specific training images under `MyDrive/FRFL/updated_samples_A/`, `updated_samples_B/`, and `updated_samples_C/`, using identity-named subfolders.
-5. Follow the interactive prompts to upload plain, mask, sunglasses+dog, and glasses test images.
-
-The runner preserves the original notebook's interactive Google Colab upload workflow. It is not intended as a standalone local script without adapting Drive and upload sections. The reusable modules in `src/frfl/` are separated for reuse; the notebook and runner preserve the original end-to-end sequence.
-
-## Outputs
-
-The experiment saves cached embeddings, model checkpoints, and evaluation results under `MyDrive/FRFL/` in folders such as `embeddings/`, `local_models/`, `federated_model/`, and `evaluation/`. These generated artifacts are intentionally excluded from Git.
+The clients are simulated in one runtime; this is not a distributed network deployment. Federated learning does not itself guarantee privacy.
 
 ## Data and privacy
 
-- Do not commit face images, embeddings, checkpoints, credentials, or other sensitive biometric data.
-- Use only data you have permission and consent to process.
-- Model updates and embeddings can still leak information; do not treat federated learning as a privacy guarantee.
-- Review train/test separation and validate results before presenting them as benchmarks.
-
-## Reproducibility
-
-Record runtime/package versions, confirm dataset labels and paths, run from a clean runtime, and evaluate on a held-out test set. The notebook has not been executed end-to-end as part of this restructuring.
+Do not commit face images, embeddings, model checkpoints, credentials, or other sensitive biometric data. Process only data you have permission and consent to use. Embeddings and model updates can still leak information.
 
 ## License
 

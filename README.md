@@ -44,9 +44,13 @@ Install the dependencies in a suitable Python/Colab environment, then run:
 
 ```bash
 python main.py --dataset-dir /path/to/105_classes_pins_dataset --work-dir artifacts --epochs 30
+
+To also run a federated round, provide all three appearance-specific update directories:
+
+python main.py --dataset-dir /path/to/105_classes_pins_dataset --client-a-dir /path/to/updated_samples_A --client-b-dir /path/to/updated_samples_B --client-c-dir /path/to/updated_samples_C --work-dir artifacts
 ```
 
-The dataset directory should contain one subfolder per identity, with that identity's images inside. Use `--ctx-id -1` for CPU or `--ctx-id 0` for the first GPU where supported.
+The dataset and each client update directory should contain identity-named subfolders with images inside. Client identity names must exist in the baseline dataset. Use `--ctx-id -1` for CPU or `--ctx-id 0` for the first GPU where supported.
 
 ## Run the full experiment
 

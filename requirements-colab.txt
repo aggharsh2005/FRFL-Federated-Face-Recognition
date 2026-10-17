@@ -1,0 +1,7 @@
+insightface==0.7.3
+onnxruntime-gpu==1.22.0
+scikit-learn
+matplotlib
+numpy
+pandas
+opencv-python-headless

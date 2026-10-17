@@ -12,7 +12,7 @@ import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from insightface.app import FaceAnalysis
 
-from src.frfl.model import FaceMLP, DEVICE, TRAIN_EPOCHS, set_seed
+from src.frfl.model import FaceMLP, DEVICE, TRAIN_EPOCHS\nfrom utils import set_global_seed, ensure_directories
 from src.frfl.embeddings import build_or_load_embedding_dataset
 from src.frfl.training import train_model
 
@@ -31,7 +31,7 @@ def parse_args():
 
 def main():
     args = parse_args()
-    set_seed()
+    set_global_seed()
     work_dir = Path(args.work_dir)
     embeddings_dir = work_dir / "embeddings"
     models_dir = work_dir / "models"

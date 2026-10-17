@@ -12,7 +12,8 @@ import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from insightface.app import FaceAnalysis
 
-from src.frfl.model import FaceMLP, DEVICE, TRAIN_EPOCHS\nfrom utils import set_global_seed, ensure_directories
+from src.frfl.model import FaceMLP, DEVICE, TRAIN_EPOCHS
+from utils import set_global_seed, ensure_directories
 from src.frfl.embeddings import build_or_load_embedding_dataset
 from src.frfl.training import train_model
 

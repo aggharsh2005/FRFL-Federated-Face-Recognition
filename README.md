@@ -1,6 +1,6 @@
 # FRFL — Federated Face Recognition
 
-**Author / Developer:** [Harsh Aggarwal](https://github.com/aggharsh2005) and [Tushar Walia]
+**Author / Developer:** [Harsh Aggarwal](https://github.com/aggharsh2005) and [Tushar Walia](https://github.com/Tushar22-tutu)
 
 
 Federated-style face recognition using InsightFace/ArcFace embeddings, a PyTorch MLP classifier, three simulated clients, diff-weighted aggregation, and FedProx fine-tuning.

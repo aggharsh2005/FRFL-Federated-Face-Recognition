@@ -18,6 +18,8 @@ FRFL-Federated-Face-Recognition/
 │   ├── training.py                        # Local training and FedProx optimizer
 │   ├── aggregation.py                     # Diff-weighted state-dict aggregation
 │   ├── federated.py                       # Federated aggregation interface
+│   ├── clients.py                          # Client-local training and FedProx helpers
+│   ├── experiment.py                       # Federated round orchestration
 │   ├── inference.py                       # Top-k prediction and before/after analysis
 │   └── evaluation.py                      # Evaluation-facing exports
 ├── requirements-colab.txt

@@ -1,0 +1,34 @@
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Datasets and sensitive biometric data
+dataset/
+datasets/
+**/dataset/**
+**/datasets/**
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.npy
+*.npz
+*.pkl
+*.pickle
+*.pt
+*.pth
+*.onnx
+
+# Outputs and checkpoints
+outputs/
+checkpoints/
+runs/
+logs/
+*.log
+
+# Notebook artifacts
+.ipynb_checkpoints/
+__pycache__/

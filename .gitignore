@@ -5,7 +5,7 @@
 *.pem
 *.key
 
-# Datasets and sensitive biometric data
+# Biometric data and local datasets
 dataset/
 datasets/
 **/dataset/**
@@ -29,6 +29,7 @@ runs/
 logs/
 *.log
 
-# Notebook artifacts
-.ipynb_checkpoints/
+# Python / notebooks
 __pycache__/
+*.py[cod]
+.ipynb_checkpoints/
